@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-function BookingForm({ availableTimes, updateTimes }) {
+function BookingForm({ availableTimes, updateTimes ,submitForm}) {
   const [date, setDate] = useState("");
   const [time, setTime] = useState("17:00");
   const [guests, setGuests] = useState(1);

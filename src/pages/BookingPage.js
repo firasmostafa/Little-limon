@@ -1,15 +1,6 @@
 import { useState } from "react";
 import BookingForm from "../components/BookingForm";
-
-function fetchAPI(date) {
-  return [
-    "17:00",
-    "18:00",
-    "19:00",
-    "20:00",
-    "21:00"
-  ];
-}
+import { fetchAPI, submitAPI } from "../api";
 
 function BookingPage() {
   const [availableTimes, setAvailableTimes] = useState(
@@ -20,6 +11,14 @@ function BookingPage() {
     const times = fetchAPI(date);
 
     setAvailableTimes(times);
+  }
+
+  function submitForm(formData) {
+    const success = submitAPI(formData);
+
+    if (success) {
+      console.log("Booking submitted successfully!");
+    }
   }
 
   return (
@@ -36,6 +35,7 @@ function BookingPage() {
         <BookingForm
           availableTimes={availableTimes}
           updateTimes={updateTimes}
+          submitForm={submitForm}
         />
 
       </section>
