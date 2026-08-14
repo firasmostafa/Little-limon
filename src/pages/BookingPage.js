@@ -1,24 +1,25 @@
-import { useState, useEffect } from "react";
+import { useReducer } from "react";
 import BookingForm from "../components/BookingForm";
 import { fetchAPI, submitAPI } from "../api";
 
-function BookingPage() {
-  const [availableTimes, setAvailableTimes] = useState(
-    fetchAPI(new Date())
-  );
+function initializeTimes() {
+  return fetchAPI(new Date());
+}
 
-  const [selectedDate, setSelectedDate] = useState(
-    new Date()
-  );
-
-  useEffect(() => {
-    const times = fetchAPI(selectedDate);
-    setAvailableTimes(times);
-  }, [selectedDate]);
-
-  function updateTimes(date) {
-    setSelectedDate(new Date(date));
+function updateTimes(state, action) {
+  if (action.type === "UPDATE_TIMES") {
+    return fetchAPI(new Date(action.date));
   }
+
+  return state;
+}
+
+function BookingPage() {
+  const [availableTimes, dispatch] = useReducer(
+    updateTimes,
+    [],
+    initializeTimes
+  );
 
   function submitForm(formData) {
     return submitAPI(formData);
@@ -37,7 +38,7 @@ function BookingPage() {
 
         <BookingForm
           availableTimes={availableTimes}
-          updateTimes={updateTimes}
+          dispatch={dispatch}
           submitForm={submitForm}
         />
 
