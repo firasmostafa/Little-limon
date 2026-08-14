@@ -692,3 +692,30 @@ button:hover {
     width: 75px;
   }
 }
+
+
+.booking-success {
+  padding: 30px;
+
+  background-color: #ffffff;
+
+  color: #333333;
+
+  border-radius: 15px;
+
+  text-align: center;
+}
+
+.booking-success h2 {
+  color: #495e57;
+
+  margin-top: 0;
+}
+
+.booking-success p {
+  margin: 10px 0;
+}
+
+.booking-success button {
+  margin-top: 20px;
+}

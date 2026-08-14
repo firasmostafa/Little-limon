@@ -1,20 +1,72 @@
 import { useState } from "react";
 
-function BookingForm({ availableTimes ,updateTimes}) {
+function BookingForm({ availableTimes, updateTimes }) {
   const [date, setDate] = useState("");
   const [time, setTime] = useState("17:00");
   const [guests, setGuests] = useState(1);
   const [occasion, setOccasion] = useState("");
+  const [submitted, setSubmitted] = useState(false);
 
   function handleSubmit(event) {
     event.preventDefault();
 
-    console.log({
+    const bookingData = {
       date,
       time,
       guests,
       occasion
-    });
+    };
+
+    console.log("Booking submitted:", bookingData);
+
+    setSubmitted(true);
+  }
+
+  function handleDateChange(event) {
+    const selectedDate = event.target.value;
+
+    setDate(selectedDate);
+
+    updateTimes(selectedDate);
+
+    setSubmitted(false);
+  }
+
+  if (submitted) {
+    return (
+      <div className="booking-success">
+        <h2>Booking Confirmed!</h2>
+
+        <p>
+          Your table has been reserved successfully.
+        </p>
+
+        <p>
+          <strong>Date:</strong> {date}
+        </p>
+
+        <p>
+          <strong>Time:</strong> {time}
+        </p>
+
+        <p>
+          <strong>Guests:</strong> {guests}
+        </p>
+
+        {occasion && (
+          <p>
+            <strong>Occasion:</strong> {occasion}
+          </p>
+        )}
+
+        <button
+          type="button"
+          onClick={() => setSubmitted(false)}
+        >
+          Make Another Reservation
+        </button>
+      </div>
+    );
   }
 
   return (
@@ -22,23 +74,17 @@ function BookingForm({ availableTimes ,updateTimes}) {
       className="booking-form"
       onSubmit={handleSubmit}
     >
-
       <label htmlFor="res-date">
         Choose date
       </label>
-<input
-  type="date"
-  id="res-date"
-  value={date}
-  onChange={(event) => {
-    const selectedDate = event.target.value;
 
-    setDate(selectedDate);
-    updateTimes(selectedDate);
-  }}
-  required
-/>
-
+      <input
+        type="date"
+        id="res-date"
+        value={date}
+        onChange={handleDateChange}
+        required
+      />
 
       <label htmlFor="res-time">
         Choose time
@@ -62,7 +108,6 @@ function BookingForm({ availableTimes ,updateTimes}) {
         ))}
       </select>
 
-
       <label htmlFor="guests">
         Number of guests
       </label>
@@ -78,7 +123,6 @@ function BookingForm({ availableTimes ,updateTimes}) {
         }
         required
       />
-
 
       <label htmlFor="occasion">
         Occasion
@@ -104,11 +148,9 @@ function BookingForm({ availableTimes ,updateTimes}) {
         </option>
       </select>
 
-
       <button type="submit">
         Reserve a Table
       </button>
-
     </form>
   );
 }
