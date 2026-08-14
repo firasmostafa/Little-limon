@@ -24,6 +24,10 @@ function BookingForm({
   function handleSubmit(event) {
     event.preventDefault();
 
+    if (!date || !time || !guests) {
+      return;
+    }
+
     const formData = {
       date,
       time,
@@ -33,6 +37,12 @@ function BookingForm({
 
     submitForm(formData);
   }
+
+  const isFormValid =
+    date !== "" &&
+    time !== "" &&
+    guests >= 1 &&
+    guests <= 10;
 
   return (
     <form
@@ -59,7 +69,9 @@ function BookingForm({
       <select
         id="res-time"
         value={time}
-        onChange={(event) => setTime(event.target.value)}
+        onChange={(event) =>
+          setTime(event.target.value)
+        }
         required
       >
         <option value="">
@@ -87,7 +99,7 @@ function BookingForm({
         max="10"
         value={guests}
         onChange={(event) =>
-          setGuests(event.target.value)
+          setGuests(Number(event.target.value))
         }
         required
       />
@@ -116,7 +128,10 @@ function BookingForm({
         </option>
       </select>
 
-      <button type="submit">
+      <button
+        type="submit"
+        disabled={!isFormValid}
+      >
         Reserve a Table
       </button>
     </form>
