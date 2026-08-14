@@ -2,11 +2,11 @@ import { useReducer } from "react";
 import BookingForm from "../components/BookingForm";
 import { fetchAPI, submitAPI } from "../api";
 
-function initializeTimes() {
+export function initializeTimes() {
   return fetchAPI(new Date());
 }
 
-function updateTimes(state, action) {
+export function updateTimes(state, action) {
   if (action.type === "UPDATE_TIMES") {
     return fetchAPI(new Date(action.date));
   }
@@ -28,7 +28,6 @@ function BookingPage() {
   return (
     <main className="main">
       <section className="booking-section">
-
         <h1>Reserve a Table</h1>
 
         <p>
@@ -41,7 +40,6 @@ function BookingPage() {
           dispatch={dispatch}
           submitForm={submitForm}
         />
-
       </section>
     </main>
   );
