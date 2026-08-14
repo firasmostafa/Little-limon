@@ -128,12 +128,13 @@ function BookingForm({
         </option>
       </select>
 
-      <button
-        type="submit"
-        disabled={!isFormValid}
-      >
-        Reserve a Table
-      </button>
+   <button
+  type="submit"
+  aria-label="On Click"
+  disabled={!isFormValid}
+>
+  Reserve a Table
+</button>
     </form>
   );
 }

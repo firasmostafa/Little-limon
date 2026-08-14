@@ -41,7 +41,7 @@ test("Renders the BookingForm button", () => {
   renderBookingForm();
 
   const button = screen.getByRole("button", {
-    name: /reserve a table/i
+    name: /on click/i
   });
 
   expect(button).toBeInTheDocument();
@@ -84,15 +84,13 @@ test("updateTimes returns available times for a selected date", () => {
     "20:00",
     "21:00"
   ]);
-
-  expect(result.length).toBeGreaterThan(0);
 });
 
-test("Reserve button is disabled when the form is empty", () => {
+test("Reserve button is disabled when form is empty", () => {
   renderBookingForm();
 
   const button = screen.getByRole("button", {
-    name: /reserve a table/i
+    name: /on click/i
   });
 
   expect(button).toBeDisabled();
@@ -101,53 +99,150 @@ test("Reserve button is disabled when the form is empty", () => {
 test("Reserve button becomes enabled with valid data", () => {
   renderBookingForm();
 
-  const dateInput = screen.getByLabelText("Choose date");
-  const timeInput = screen.getByLabelText("Choose time");
-  const guestsInput = screen.getByLabelText("Number of guests");
+  fireEvent.change(
+    screen.getByLabelText("Choose date"),
+    {
+      target: { value: "2026-08-20" }
+    }
+  );
 
-  fireEvent.change(dateInput, {
-    target: { value: "2026-08-20" }
-  });
+  fireEvent.change(
+    screen.getByLabelText("Choose time"),
+    {
+      target: { value: "19:00" }
+    }
+  );
 
-  fireEvent.change(timeInput, {
-    target: { value: "19:00" }
-  });
-
-  fireEvent.change(guestsInput, {
-    target: { value: "2" }
-  });
+  fireEvent.change(
+    screen.getByLabelText("Number of guests"),
+    {
+      target: { value: "2" }
+    }
+  );
 
   const button = screen.getByRole("button", {
-    name: /reserve a table/i
+      name: /on click/i
   });
 
   expect(button).toBeEnabled();
 });
 
-test("submitForm is called with valid booking data", () => {
-  const { mockSubmitForm } = renderBookingForm();
+test("HTML5 validation attributes are correctly applied", () => {
+  renderBookingForm();
 
   const dateInput = screen.getByLabelText("Choose date");
   const timeInput = screen.getByLabelText("Choose time");
-  const guestsInput = screen.getByLabelText("Number of guests");
+  const guestsInput =
+    screen.getByLabelText("Number of guests");
 
-  fireEvent.change(dateInput, {
-    target: { value: "2026-08-20" }
-  });
+  expect(dateInput).toBeRequired();
+  expect(dateInput).toHaveAttribute(
+    "min",
+    new Date().toISOString().split("T")[0]
+  );
 
-  fireEvent.change(timeInput, {
-    target: { value: "19:00" }
-  });
+  expect(timeInput).toBeRequired();
+
+  expect(guestsInput).toBeRequired();
+  expect(guestsInput).toHaveAttribute("min", "1");
+  expect(guestsInput).toHaveAttribute("max", "10");
+});
+
+test("Guests value is invalid when it is below 1", () => {
+  renderBookingForm();
+
+  fireEvent.change(
+    screen.getByLabelText("Choose date"),
+    {
+      target: { value: "2026-08-20" }
+    }
+  );
+
+  fireEvent.change(
+    screen.getByLabelText("Choose time"),
+    {
+      target: { value: "19:00" }
+    }
+  );
+
+  const guestsInput =
+    screen.getByLabelText("Number of guests");
 
   fireEvent.change(guestsInput, {
-    target: { value: "2" }
+    target: { value: "0" }
   });
+
+  expect(guestsInput).toBeInvalid();
 
   const button = screen.getByRole("button", {
-    name: /reserve a table/i
+      name: /on click/i
   });
 
-  fireEvent.click(button);
+  expect(button).toBeDisabled();
+});
+
+test("Guests value is invalid when it is above 10", () => {
+  renderBookingForm();
+
+  fireEvent.change(
+    screen.getByLabelText("Choose date"),
+    {
+      target: { value: "2026-08-20" }
+    }
+  );
+
+  fireEvent.change(
+    screen.getByLabelText("Choose time"),
+    {
+      target: { value: "19:00" }
+    }
+  );
+
+  const guestsInput =
+    screen.getByLabelText("Number of guests");
+
+  fireEvent.change(guestsInput, {
+    target: { value: "11" }
+  });
+
+  expect(guestsInput).toBeInvalid();
+
+  const button = screen.getByRole("button", {
+     name: /on click/i
+  });
+
+  expect(button).toBeDisabled();
+});
+
+test("submitForm is called with valid booking data", () => {
+  const { mockSubmitForm } = renderBookingForm();
+
+  fireEvent.change(
+    screen.getByLabelText("Choose date"),
+    {
+      target: { value: "2026-08-20" }
+    }
+  );
+
+  fireEvent.change(
+    screen.getByLabelText("Choose time"),
+    {
+      target: { value: "19:00" }
+    }
+  );
+
+  fireEvent.change(
+    screen.getByLabelText("Number of guests"),
+    {
+      target: { value: "2" }
+    }
+  );
+
+  fireEvent.click(
+    screen.getByRole("button", {
+       name: /on click/i
+    })
+  );
 
   expect(mockSubmitForm).toHaveBeenCalledWith({
     date: "2026-08-20",
