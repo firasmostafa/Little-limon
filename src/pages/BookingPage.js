@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import BookingForm from "../components/BookingForm";
 import { fetchAPI, submitAPI } from "../api";
 
@@ -7,18 +7,21 @@ function BookingPage() {
     fetchAPI(new Date())
   );
 
-  function updateTimes(date) {
-    const times = fetchAPI(date);
+  const [selectedDate, setSelectedDate] = useState(
+    new Date()
+  );
 
+  useEffect(() => {
+    const times = fetchAPI(selectedDate);
     setAvailableTimes(times);
+  }, [selectedDate]);
+
+  function updateTimes(date) {
+    setSelectedDate(new Date(date));
   }
 
   function submitForm(formData) {
-    const success = submitAPI(formData);
-
-    if (success) {
-      console.log("Booking submitted successfully!");
-    }
+    return submitAPI(formData);
   }
 
   return (

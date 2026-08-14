@@ -1,4 +1,6 @@
 export function fetchAPI(date) {
+  console.log("Fetching available times for:", date);
+
   return [
     "17:00",
     "18:00",
@@ -10,6 +12,14 @@ export function fetchAPI(date) {
 
 export function submitAPI(formData) {
   console.log("Sending booking:", formData);
+
+  if (
+    !formData.date ||
+    !formData.time ||
+    !formData.guests
+  ) {
+    return false;
+  }
 
   return true;
 }

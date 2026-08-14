@@ -8,20 +8,22 @@ function BookingForm({ availableTimes, updateTimes ,submitForm}) {
   const [submitted, setSubmitted] = useState(false);
 
   function handleSubmit(event) {
-    event.preventDefault();
+  event.preventDefault();
 
-    const bookingData = {
-      date,
-      time,
-      guests,
-      occasion
-    };
+  const bookingData = {
+    date,
+    time,
+    guests,
+    occasion
+  };
 
+  const success = submitForm(bookingData);
+
+  if (success) {
     console.log("Booking submitted:", bookingData);
-
     setSubmitted(true);
   }
-
+}
   function handleDateChange(event) {
     const selectedDate = event.target.value;
 
