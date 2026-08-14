@@ -1,4 +1,5 @@
 import { useReducer } from "react";
+import { useNavigate } from "react-router-dom";
 import BookingForm from "../components/BookingForm";
 import { fetchAPI, submitAPI } from "../api";
 
@@ -21,8 +22,14 @@ function BookingPage() {
     initializeTimes
   );
 
+  const navigate = useNavigate();
+
   function submitForm(formData) {
-    return submitAPI(formData);
+    const success = submitAPI(formData);
+
+    if (success) {
+      navigate("/confirmed");
+    }
   }
 
   return (

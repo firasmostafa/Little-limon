@@ -1,76 +1,37 @@
 import { useState } from "react";
 
-function BookingForm({ availableTimes, dispatch ,submitForm}) {
+function BookingForm({
+  availableTimes,
+  dispatch,
+  submitForm
+}) {
   const [date, setDate] = useState("");
-  const [time, setTime] = useState("17:00");
+  const [time, setTime] = useState("");
   const [guests, setGuests] = useState(1);
   const [occasion, setOccasion] = useState("");
-  const [submitted, setSubmitted] = useState(false);
+
+  function handleDateChange(event) {
+    const selectedDate = event.target.value;
+
+    setDate(selectedDate);
+
+    dispatch({
+      type: "UPDATE_TIMES",
+      date: selectedDate
+    });
+  }
 
   function handleSubmit(event) {
-  event.preventDefault();
+    event.preventDefault();
 
-  const bookingData = {
-    date,
-    time,
-    guests,
-    occasion
-  };
+    const formData = {
+      date,
+      time,
+      guests,
+      occasion
+    };
 
-  const success = submitForm(bookingData);
-
-  if (success) {
-    console.log("Booking submitted:", bookingData);
-    setSubmitted(true);
-  }
-}
- function handleDateChange(event) {
-  const selectedDate = event.target.value;
-
-  setDate(selectedDate);
-
-  dispatch({
-    type: "UPDATE_TIMES",
-    date: selectedDate
-  });
-
-  setSubmitted(false);
-}
-  if (submitted) {
-    return (
-      <div className="booking-success">
-        <h2>Booking Confirmed!</h2>
-
-        <p>
-          Your table has been reserved successfully.
-        </p>
-
-        <p>
-          <strong>Date:</strong> {date}
-        </p>
-
-        <p>
-          <strong>Time:</strong> {time}
-        </p>
-
-        <p>
-          <strong>Guests:</strong> {guests}
-        </p>
-
-        {occasion && (
-          <p>
-            <strong>Occasion:</strong> {occasion}
-          </p>
-        )}
-
-        <button
-          type="button"
-          onClick={() => setSubmitted(false)}
-        >
-          Make Another Reservation
-        </button>
-      </div>
-    );
+    submitForm(formData);
   }
 
   return (
@@ -82,14 +43,14 @@ function BookingForm({ availableTimes, dispatch ,submitForm}) {
         Choose date
       </label>
 
-    <input
-  type="date"
-  id="res-date"
-  value={date}
-  onChange={handleDateChange}
-  min={new Date().toISOString().split("T")[0]}
-  required
-/>
+      <input
+        type="date"
+        id="res-date"
+        value={date}
+        onChange={handleDateChange}
+        min={new Date().toISOString().split("T")[0]}
+        required
+      />
 
       <label htmlFor="res-time">
         Choose time
@@ -98,11 +59,13 @@ function BookingForm({ availableTimes, dispatch ,submitForm}) {
       <select
         id="res-time"
         value={time}
-        onChange={(event) =>
-          setTime(event.target.value)
-        }
+        onChange={(event) => setTime(event.target.value)}
         required
       >
+        <option value="">
+          Select a time
+        </option>
+
         {availableTimes.map((availableTime) => (
           <option
             key={availableTime}

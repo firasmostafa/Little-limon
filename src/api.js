@@ -11,15 +11,7 @@ export function fetchAPI(date) {
 }
 
 export function submitAPI(formData) {
-  console.log("Sending booking:", formData);
-
-  if (
-    !formData.date ||
-    !formData.time ||
-    !formData.guests
-  ) {
-    return false;
-  }
+  console.log("Submitting booking:", formData);
 
   return true;
 }
